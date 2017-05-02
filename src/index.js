@@ -3,13 +3,14 @@ const isNull = value => value === 'undefined' || value === null
 const hasSameProps = (obj1, obj2) =>
   Object.keys(obj1).every(prop => obj2.hasOwnProperty(prop))
 
-export const getLocalStore = () =>
-  JSON.parse(localStorage.getItem('reduxStore'))
+const getLocalStore = () => JSON.parse(localStorage.getItem('reduxStore'))
 
-export const checkChanges = store => getLocalStore() !== store.getState()
-
-export const setLocalStore = store =>
+const setLocalStore = store =>
   localStorage.setItem('reduxStore', JSON.stringify(store.getState()))
+
+const checkChanges = store => getLocalStore() !== store.getState()
+
+export const resetLocalStore = () => localStorage.removeItem('reduxStore')
 
 export const getState = () => (!isNull(getLocalStore()) ? getLocalStore() : {})
 
