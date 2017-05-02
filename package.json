@@ -1,0 +1,34 @@
+{
+  "name": "redux-localstore",
+  "version": "0.1.0",
+  "description": "Synchronize Redux Store with localStorage",
+  "license": "MIT",
+  "author": "Junior Oliveira",
+  "main": "lib/redux-localstore.min.js",
+  "scripts": {
+    "build": "webpack --mode=build",
+    "dev": "webpack --progress --colors --watch --mode=dev"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^6.4.1",
+    "babel-plugin-add-module-exports": "0.1.2",
+    "babel-preset-es2015": "6.3.13",
+    "webpack": "1.12.9",
+    "yargs": "3.32.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arojunior/redux-localstore.git"
+  },
+  "keywords": [
+    "es6",
+    "redux",
+    "localStorage",
+    "persist"
+  ],
+  "bugs": {
+    "url": "https://github.com/arojunior/redux-localstore/issues"
+  },
+  "homepage": "https://github.com/arojunior/redux-localstore"
+}
