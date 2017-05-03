@@ -8,8 +8,6 @@ const getLocalStore = () => JSON.parse(localStorage.getItem('reduxStore'))
 const setLocalStore = store =>
   localStorage.setItem('reduxStore', JSON.stringify(store.getState()))
 
-const checkChanges = store => getLocalStore() !== store.getState()
-
 export const resetLocalStore = () => localStorage.removeItem('reduxStore')
 
 export const getState = () => (!isNull(getLocalStore()) ? getLocalStore() : {})
