@@ -21,7 +21,7 @@ export const store = createStore(combineReducer)
 
 storeSynchronize(store)
 ```
-To populate the initalState from localStorage, import ***defineState*** method from `'redux-localstore'`, pass your `defaultState` as first parameter and the reducer key as second.
+To populate the initalState from localStorage, import ***defineState*** method from `'redux-localstore'`, pass your `defaultState` as first parameter and the reducer key as second. (note that it's using currying)
 
 ### Reducer example
 ```javascript
@@ -31,7 +31,7 @@ const defaultState = {
   data: null
 }
 
-const initialState = defineState(defaultState, 'Reducer1')
+const initialState = defineState(defaultState)('Reducer1')
 
 export default (state = initialState, action) => {
   switch (action.type) {

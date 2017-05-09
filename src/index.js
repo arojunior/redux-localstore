@@ -12,7 +12,7 @@ export const resetLocalStore = () => localStorage.removeItem('reduxStore')
 
 export const getState = () => (!isNull(getLocalStore()) ? getLocalStore() : {})
 
-export const defineState = (defaultState, reducer) => {
+export const defineState = defaultState => reducer => {
   if (getState().hasOwnProperty(reducer)) {
     const localReducer = getState()[reducer]
     return hasSameProps(defaultState, localReducer)
