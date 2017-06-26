@@ -3,10 +3,24 @@ const isNull = value => value === 'undefined' || value === null
 const hasSameProps = (obj1, obj2) =>
   Object.keys(obj1).every(prop => obj2.hasOwnProperty(prop))
 
-const getLocalStore = () => JSON.parse(localStorage.getItem('reduxStore'))
+const getLocalStore = () => {
+  try {
+    return JSON.parse(window.localStorage.getItem('reduxStore'))
+  } catch (e) {
+    return {}
+  }
+}
 
-const setLocalStore = store =>
-  localStorage.setItem('reduxStore', JSON.stringify(store.getState()))
+const setLocalStore = store => {
+  try {
+    return window.localStorage.setItem(
+      'reduxStore',
+      JSON.stringify(store.getState())
+    )
+  } catch (e) {
+    return {}
+  }
+}
 
 export const resetLocalStore = () => localStorage.removeItem('reduxStore')
 
