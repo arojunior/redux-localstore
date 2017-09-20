@@ -3,69 +3,59 @@ const isNull = value => value === 'undefined' || value === null
 const hasSameProps = (obj1, obj2) =>
   Object.keys(obj1).every(prop => obj2.hasOwnProperty(prop))
 
-const setStorage = (
-  config = {
-    storage: 'localStorage'
+const defaults = {
+  storage: 'localStorage'
+}
+
+export const storeConfig = () => defaults
+
+const setStorage = config => {
+  if (config.hasOwnProperty('storage')) {
+    defaults.storage = config.storage
   }
-) => config
+}
 
-store.subscribe(() => this.setLocalStore(store))
+const getStorage = () => {
+  return window[defaults.storage]
+}
 
-export default class LocalStore {
-  constructor(store, config = null) {
-    this.store = store
-
-    this.defaults = {
-      storage: 'localStorage'
-    }
-
-    if (config) {
-      this.defaults = config
-    }
-
-    store.subscribe(() => this.setLocalStore(store))
+const getLocalStore = () => {
+  try {
+    return JSON.parse(getStorage().getItem('reduxStore'))
+  } catch (e) {
+    return {}
   }
+}
 
-  getStorage() {
-    return window[this.defaults.storage]
+const setLocalStore = store => {
+  try {
+    return getStorage().setItem('reduxStore', JSON.stringify(store.getState()))
+  } catch (e) {
+    return {}
   }
+}
 
-  getState() {
-    return !isNull(this.getLocalStore()) ? this.getLocalStore() : {}
+export const defineState = defaultState => reducer => {
+  if (getState().hasOwnProperty(reducer)) {
+    const localReducer = getState()[reducer]
+    return hasSameProps(defaultState, localReducer)
+      ? localReducer
+      : defaultState
   }
+  return defaultState
+}
 
-  getLocalStore() {
-    try {
-      return JSON.parse(this.getStorage().getItem('reduxStore'))
-    } catch (e) {
-      return {}
-    }
-  }
+export const resetState = () => {
+  return getStorage().removeItem('reduxStore')
+}
 
-  setLocalStore(store) {
-    try {
-      return this.getStorage().setItem(
-        'reduxStore',
-        JSON.stringify(this.store.getState())
-      )
-    } catch (e) {
-      return {}
-    }
-  }
+export const getState = () => {
+  return !isNull(getLocalStore()) ? getLocalStore() : {}
+}
 
-  defineState(defaultState) {
-    return reducer => {
-      if (this.getState().hasOwnProperty(reducer)) {
-        const localReducer = this.getState()[reducer]
-        return hasSameProps(defaultState, localReducer)
-          ? localReducer
-          : defaultState
-      }
-      return defaultState
-    }
+export default (store, config = null) => {
+  if (config) {
+    setStorage(config)
   }
-
-  resetState() {
-    return this.getStorage().removeItem('reduxStore')
-  }
+  return store.subscribe(() => setLocalStore(store))
 }

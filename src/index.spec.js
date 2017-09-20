@@ -1,6 +1,11 @@
 import { createStore, combineReducers } from 'redux'
 import localStorage from 'mock-local-storage'
-import LocalStore, {getState} from './index'
+import storeSynchronize, {
+  storeConfig,
+  getState,
+  defineState,
+  resetState
+} from './index'
 
 global.window = {}
 window.localStorage = global.localStorage
@@ -21,26 +26,25 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer)
 
 describe('redux-localstore', () => {
-  
   let localStore
 
   beforeEach(() => {
-    localStore = new LocalStore(store)
+    localStore = storeSynchronize(store)
   })
 
-  it('Should not throw an error', () => {    
+  it('Should not throw an error', () => {
     expect(localStore).toBeDefined()
   })
 
   it('Should return the default storage name', () => {
-    expect(localStore.defaults.storage).toBe('localStorage')
+    expect(storeConfig().storage).toBe('localStorage')
   })
 
   it('Should return the correct storage name after change', () => {
-    localStore = new LocalStore(store, {
+    localStore = storeSynchronize(store, {
       storage: 'sessionStorage'
     })
-    expect(localStore.defaults.storage).toBe('sessionStorage')
+    expect(storeConfig().storage).toBe('sessionStorage')
   })
 
   it('Should return the store content after dispatch', () => {
@@ -49,20 +53,19 @@ describe('redux-localstore', () => {
       payload: 'testing'
     })
 
-    expect(localStore.getState()).toEqual({
+    expect(getState()).toEqual({
       testReducer: {
         data: 'testing'
       }
-    })    
-  })  
+    })
+  })
 
   it('Should pass initial state to reducer from localStore', () => {
-
     const defaultState = {
       data: 'Testando'
     }
 
-    const initialState = localStore.defineState(defaultState)('testReducer')
+    const initialState = defineState(defaultState)('testReducer')
 
     const newReducer = (state = initialState, action) => {
       if (action.type === 'test') {
@@ -72,7 +75,7 @@ describe('redux-localstore', () => {
       }
       return state
     }
-    
+
     const newRootReducer = combineReducers({
       newReducer
     })
@@ -83,15 +86,13 @@ describe('redux-localstore', () => {
       testReducer: newStore.getState().newReducer
     }
 
-    expect(localStore.getState()).not.toEqual(defaultState)
-    expect(localStore.getState()).toEqual(newReducerState)    
-  })  
+    expect(getState()).not.toEqual(defaultState)
+    expect(getState()).toEqual(newReducerState)
+  })
 
   it('Should return the store empty after reset', () => {
-    localStore.resetState()
+    resetState()
 
-    expect(localStore.getState()).toEqual({})    
-  })  
+    expect(getState()).toEqual({})
+  })
 })
-
-console.log(getState())

@@ -21,6 +21,14 @@ export const store = createStore(combineReducer)
 
 storeSynchronize(store)
 ```
+The default store is `localStorage` (persists until the ***browser*** is closed), but since version 0.3.0 you can change the default to `sessionStorage` (persists until the ***tab*** is closed).
+
+```javascript
+storeSynchronize(store, {
+  storage: 'sessionStorage'
+})
+```
+
 To populate the initalState from localStorage, import ***defineState*** method from `'redux-localstore'`, pass your `defaultState` as first parameter and the reducer key as second. (note that it's using currying)
 
 ### Reducer example
@@ -60,7 +68,7 @@ const state = getState()
 
 ### If you need to reset the local store
 ```javascript
-import {resetLocalStore} from 'redux-localstore'
+import {resetState} from 'redux-localstore'
 
-resetLocalStore()
+resetState()
 ```
