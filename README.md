@@ -6,40 +6,42 @@ Subscribe Redux Store and replicate to `localStorage`, so user will can refresh 
 
 ### Store example
 
-Just import the ***default method*** (you can call storeSynchronize as the example above) from `'redux-localstore'` and pass store as parameter
+Just import the **_default method_** (you can call storeSynchronize as the example above) from `'redux-localstore'` and pass store as parameter
 
 ```javascript
-import {createStore, combineReducers} from 'redux'
-import storeSynchronize from 'redux-localstore'
+import { createStore, combineReducers } from 'redux';
+import storeSynchronize from 'redux-localstore';
 
 const combineReducer = combineReducers({
   Reducer1,
   Reducer2
-})
+});
 
-export const store = createStore(combineReducer)
+export const store = createStore(combineReducer);
 
-storeSynchronize(store)
+storeSynchronize(store);
 ```
-The default store is `localStorage` (persists until the ***browser*** is closed), but since version 0.3.0 you can change the default to `sessionStorage` (persists until the ***tab*** is closed).
+
+The default store is `localStorage` (persists until the **_browser_** is closed), but since version 0.3.0 you can change the default to `sessionStorage` (persists until the **_tab_** is closed).
 
 ```javascript
 storeSynchronize(store, {
   storage: 'sessionStorage'
-})
+});
 ```
 
-To populate the initalState from localStorage, import ***defineState*** method from `'redux-localstore'`, pass your `defaultState` as first parameter and the reducer key as second. (note that it's using currying)
+To populate the initalState from localStorage, import **_defineState_** method from `'redux-localstore'`, pass your `defaultState` as first parameter and the reducer key as second. (note that it's using currying)
 
 ### Reducer example
+
 ```javascript
-import {defineState} from 'redux-localstore'
+import { defineState } from 'redux-localstore';
 
 const defaultState = {
   data: null
-}
+};
 
-const initialState = defineState(defaultState)('Reducer1')
+const initialState = defineState(defaultState)('Reducer1');
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -47,28 +49,30 @@ export default (state = initialState, action) => {
       return {
         ...state,
         data: action.payload
-      }
+      };
     case 'ACTION2':
       return {
         ...state,
         data: null
-      }
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 ```
 
 ### Get local state
-```javascript
-import {getState} from 'redux-localstore'
 
-const state = getState()
+```javascript
+import { getState } from 'redux-localstore';
+
+const state = getState();
 ```
 
 ### If you need to reset the local store
-```javascript
-import {resetState} from 'redux-localstore'
 
-resetState()
+```javascript
+import { resetState } from 'redux-localstore';
+
+resetState();
 ```
