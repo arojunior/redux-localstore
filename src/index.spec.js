@@ -20,24 +20,15 @@ const rootReducer = combineReducers({
 });
 
 const store = createStore(rootReducer);
+storeSynchronize(store);
 
 describe('redux-localstore', () => {
-  let localStore;
-
-  beforeEach(() => {
-    localStore = storeSynchronize(store);
-  });
-
-  it('Should not throw an error', () => {
-    expect(localStore).toBeDefined();
-  });
-
   it('Should return the default storage name', () => {
     expect(storeConfig().storage).toBe('localStorage');
   });
 
   it('Should return the correct storage name after change', () => {
-    localStore = storeSynchronize(store, {
+    storeSynchronize(store, {
       storage: 'sessionStorage'
     });
     expect(storeConfig().storage).toBe('sessionStorage');
@@ -58,7 +49,7 @@ describe('redux-localstore', () => {
 
   it('Should pass initial state to reducer from localStore', () => {
     const defaultState = {
-      data: 'Testando'
+      data: 'Test'
     };
 
     const initialState = defineState(defaultState)('testReducer');
@@ -90,5 +81,46 @@ describe('redux-localstore', () => {
     resetState();
 
     expect(getState()).toEqual({});
+  });
+
+  it(`Should not persist reducer in the blacklist`, () => {
+    const newReducer = (state = {}, action) => {
+      if (action.type === 'newReducer') {
+        return Object.assign({}, state, { data: action.payload });
+      }
+      return state;
+    };
+
+    const blackListReducer = (state = {}, action) => {
+      if (action.type === 'blacklist') {
+        return Object.assign({}, state, { data: action.payload });
+      }
+      return state;
+    };
+
+    const newRootReducer = combineReducers({
+      newReducer,
+      blackListReducer
+    });
+
+    const newStore = createStore(newRootReducer);
+
+    storeSynchronize(newStore, {
+      blacklist: ['blackListReducer'],
+      storage: 'localStorage'
+    });
+
+    newStore.dispatch({
+      type: 'newReducer',
+      payload: 'newReducer'
+    });
+
+    newStore.dispatch({
+      type: 'blacklist',
+      payload: 'blackListReducer'
+    });
+
+    expect(getState().newReducer.data).toBe('newReducer');
+    expect(getState().blackListReducer).toBeUndefined();
   });
 });
