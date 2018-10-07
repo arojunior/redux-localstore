@@ -1,14 +1,10 @@
 import { createStore, combineReducers } from 'redux';
-import localStorage from 'mock-local-storage';
 import storeSynchronize, {
   storeConfig,
   getState,
   defineState,
   resetState
 } from './index';
-
-global.window = {};
-window.localStorage = global.localStorage;
 
 const testReducer = (state = {}, action) => {
   if (action.type === 'test') {
