@@ -30,6 +30,14 @@ storeSynchronize(store, {
 });
 ```
 
+If you need to ignore some reducer, you can use the **blacklist** configuration:
+
+```javascript
+storeSynchronize(store, {
+  blacklist: ['Auth']
+});
+```
+
 To populate the initalState from localStorage, import **_defineState_** method from `'redux-localstore'`, pass your `defaultState` as first parameter and the reducer key as second. (note that it's using currying)
 
 ### Reducer example

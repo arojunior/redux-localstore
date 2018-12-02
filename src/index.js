@@ -4,7 +4,8 @@ const hasSameProps = (obj1, obj2) =>
   Object.keys(obj1).every(prop => obj2.hasOwnProperty(prop));
 
 const defaults = {
-  storage: 'localStorage'
+  storage: 'localStorage',
+  blacklist: []
 };
 
 export const storeConfig = () => defaults;
@@ -12,6 +13,9 @@ export const storeConfig = () => defaults;
 const setStorage = config => {
   if (config.hasOwnProperty('storage')) {
     defaults.storage = config.storage;
+  }
+  if (config.hasOwnProperty('blacklist')) {
+    defaults.blacklist = config.blacklist;
   }
 };
 
@@ -27,9 +31,21 @@ const getLocalStore = () => {
   }
 };
 
+const filterBlackList = state => {
+  Object.keys(state).forEach(value => {
+    if (defaults.blacklist.indexOf(value) !== -1) {
+      state[value] = undefined;
+    }
+  });
+  return state;
+};
+
 const setLocalStore = store => {
   try {
-    return getStorage().setItem('reduxStore', JSON.stringify(store.getState()));
+    return getStorage().setItem(
+      'reduxStore',
+      JSON.stringify(filterBlackList(store.getState()))
+    );
   } catch (e) {
     return {};
   }
