@@ -1,11 +1,23 @@
 const isNull = value => value === 'undefined' || value === null;
 
-const hasSameProps = (obj1, obj2) =>
-  Object.keys(obj1).every(prop => obj2.hasOwnProperty(prop));
+const hasSameProps = (obj1, obj2) => {
+  return Object.keys(obj1).every(prop => obj2.hasOwnProperty(prop));
+};
+
+const hasValidItemsType = array => array.every(item => typeof item === 'string');
+
+const convertArrayToObject = array => {
+  return array.reduce((obj, item) => {
+    return {
+      ...obj,
+      [item]: item,
+    };
+  }, {});
+};
 
 const defaults = {
   storage: 'localStorage',
-  blacklist: []
+  blacklist: {}
 };
 
 export const storeConfig = () => defaults;
@@ -15,7 +27,10 @@ const setStorage = config => {
     defaults.storage = config.storage;
   }
   if (config.hasOwnProperty('blacklist')) {
-    defaults.blacklist = config.blacklist;
+    if (!hasValidItemsType(config.blacklist)) {
+      throw new Error('Backlist item type should be string');
+    }
+    defaults.blacklist = convertArrayToObject(config.blacklist);
   }
 };
 
@@ -32,19 +47,26 @@ const getLocalStore = () => {
 };
 
 const filterBlackList = state => {
+  const localState = { ...state };
+  const { blacklist } = storeConfig();
   Object.keys(state).forEach(value => {
-    if (defaults.blacklist.indexOf(value) !== -1) {
-      state[value] = undefined;
+    if (blacklist[value]) {
+      localState[value] = undefined;
     }
   });
-  return state;
+  return localState;
 };
+
+const getStoreToPersist = store => {
+  const localState = filterBlackList(store.getState());
+  return localState;
+}
 
 const setLocalStore = store => {
   try {
     return getStorage().setItem(
       'reduxStore',
-      JSON.stringify(filterBlackList(store.getState()))
+      JSON.stringify(getStoreToPersist(store))
     );
   } catch (e) {
     return {};
