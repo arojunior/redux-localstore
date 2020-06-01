@@ -4,7 +4,7 @@ import storeSynchronize, {
   getState,
   defineState,
   resetState
-} from './index';
+} from './main';
 
 const testReducer = (state = {}, action) => {
   if (action.type === 'test') {
