@@ -24,7 +24,7 @@ storeSynchronize(store); // the default config synchronizes the whole store
 
 ### localStorage / sessionStorage
 
-The default store is `localStorage` (persists until the **_browser_** is closed), but since version 0.3.0 you can change the default to `sessionStorage` (persists until the **_tab_** is closed).
+The default browser storage is the `localStorage` (persists until the **_browser_** is closed), but since version 0.3.0 you can change the default to `sessionStorage` (persists until the **_tab_** is closed).
 
 ```javascript
 storeSynchronize(store, {
@@ -54,7 +54,7 @@ storeSynchronize(store, {
 
 ### Reducer example
 
-To populate the initalState from localStorage, import **_defineState_** method from `'redux-localstore'`, pass your `defaultState` as first parameter and the reducer key as second. (note that it's using currying)
+To populate the initalState from browser storage, import **_defineState_** method from `'redux-localstore'`, pass your `defaultState` as first parameter and the reducer key as second. (note that it's using currying)
 
 ```javascript
 import { defineState } from 'redux-localstore';
