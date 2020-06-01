@@ -6,3 +6,4 @@ script:
 deploy:
   provider: npm
   email: arojunior@gmail.com
+  api_key: $NPM_TOKEN
