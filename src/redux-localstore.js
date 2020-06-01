@@ -32,6 +32,12 @@ const setStorage = config => {
     }
     defaults.blacklist = convertArrayToObject(config.blacklist);
   }
+  if (config.hasOwnProperty('whitelist')) {
+    if (!hasValidItemsType(config.whitelist)) {
+      throw new Error('Whitelist item type should be string');
+    }
+    defaults.whitelist = convertArrayToObject(config.whitelist);
+  }  
 };
 
 const getStorage = () => {
@@ -46,7 +52,7 @@ const getLocalStore = () => {
   }
 };
 
-const filterBlackList = state => {
+const filterBlacklist = state => {
   const localState = { ...state };
   const { blacklist } = storeConfig();
   Object.keys(state).forEach(value => {
@@ -57,9 +63,22 @@ const filterBlackList = state => {
   return localState;
 };
 
-const getStoreToPersist = store => {
-  const localState = filterBlackList(store.getState());
+const filterWhitelist = state => {
+  const localState = {};
+  const { whitelist } = storeConfig();
+  Object.keys(state).forEach(value => {
+    if (whitelist[value]) {
+      localState[value] = state[value];
+    }
+  });
   return localState;
+};
+
+const getStoreToPersist = store => {
+  if (storeConfig().whitelist) {
+    return filterWhitelist(store.getState());
+  }
+  return filterBlacklist(store.getState());
 }
 
 const setLocalStore = store => {
