@@ -1,2 +1,1 @@
-export * from './redux-localstore';
-export { default } from './redux-localstore';
+export { default, defineState, getState, resetState, storeConfig } from './redux-localstore';

@@ -4,9 +4,9 @@ const hasSameProps = (obj1, obj2) => {
   return Object.keys(obj1).every(prop => obj2.hasOwnProperty(prop));
 };
 
-const hasValidItemsType = array => array.every(item => typeof item === 'string');
+const hasValidItemsType = (array = []) => array.every(item => typeof item === 'string');
 
-const convertArrayToObject = array => {
+const convertArrayToObject = (array = []) => {
   return array.reduce((obj, item) => {
     return {
       ...obj,
